@@ -6,6 +6,8 @@ const btnDetener = document.querySelector('#btnDetener')
 const btnNuevo = document.querySelector('#btnNuevo')
 let jugadorPuntos = 0
 let computadoraPuntos = 0
+const puntosHTML = document.querySelectorAll('span')
+const divJugadorCartas = document.querySelector('#jugador-cartas')
 
 /*const createDeck = ()=>{
     for (let i = 2; i <= 10; i++){
@@ -70,8 +72,20 @@ console.log({value})*/
 btnPedir.addEventListener('click',()=>{
     const card = drawCard()
     jugadorPuntos = jugadorPuntos+cardValue(card)
-    console.log(jugadorPuntos)
-    /*console.log(card)*/
+    puntosHTML[0].innerText = jugadorPuntos
+    //<!-- <img class="carta" src="./assets/2C.png" alt="carta"/> -->
+    const imgCarta = document.createElement('img')
+    imgCarta.src = `./assets/${card}.png`
+    imgCarta.alt = 'carta'
+    imgCarta.classList.add('carta')
+    divJugadorCartas.append(imgCarta)
+    if (jugadorPuntos > 21) {
+        console.warn("Perdiste, gg")
+        btnPedir.disabled = true
+    }else if(jugadorPuntos === 21){
+        console.log("Ganaste!")
+        btnPedir.disabled = true
+    }
 })
 btnNuevo.addEventListener('click',()=>{
     console.log("Nuevo Juego Creado")
