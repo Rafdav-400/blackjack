@@ -8,6 +8,7 @@ let jugadorPuntos = 0
 let computadoraPuntos = 0
 const puntosHTML = document.querySelectorAll('span')
 const divJugadorCartas = document.querySelector('#jugador-cartas')
+const divComputadoraCartas = document.querySelector('#computadora-cartas')
 
 /*const createDeck = ()=>{
     for (let i = 2; i <= 10; i++){
@@ -69,6 +70,38 @@ const cardValue = (card)=>{
 }
 /*const value = cardValue(drawCard())
 console.log({value})*/
+//Turno de la computadora
+
+const turnoCompu = (minPuntos)=>{
+    console.log("hola")
+    do {
+        const card = drawCard()
+        computadoraPuntos = computadoraPuntos+cardValue(card)
+        puntosHTML[1].innerText = computadoraPuntos
+        //<!-- <img class="carta" src="./assets/2C.png" alt="carta"/> -->
+        const imgCarta = document.createElement('img')
+        imgCarta.src = `./assets/${card}.png`
+        imgCarta.alt = 'carta'
+        imgCarta.classList.add('carta')
+        divComputadoraCartas.append(imgCarta)
+        if (minPuntos > 21) {
+            break
+        }
+    } while ((computadoraPuntos < minPuntos) && (minPuntos <= 21));
+    setTimeout(()=>{
+        if (computadoraPuntos === minPuntos) {
+            alert("Nadie ganó, fue un empate.")
+        } else if (minPuntos > 21){
+            alert("La computadora gana/ó.")
+        } else if (computadoraPuntos > 21) {
+            alert("El jugador gana/ó.")
+        } else {
+            alert("La computadora gana.")
+        }
+    }, 10)
+}
+
+//Eventos
 btnPedir.addEventListener('click',()=>{
     const card = drawCard()
     jugadorPuntos = jugadorPuntos+cardValue(card)
@@ -80,16 +113,35 @@ btnPedir.addEventListener('click',()=>{
     imgCarta.classList.add('carta')
     divJugadorCartas.append(imgCarta)
     if (jugadorPuntos > 21) {
-        console.warn("Perdiste, gg")
+        console.warn("Perdiste, te pasaste de 21.")
         btnPedir.disabled = true
+        btnDetener.disabled = true
+        turnoCompu(jugadorPuntos)
     }else if(jugadorPuntos === 21){
-        console.log("Ganaste!")
+        console.log("Sacaste 21 puntos!")
         btnPedir.disabled = true
+        turnoCompu(jugadorPuntos)
+        btnDetener.disabled = true
     }
 })
+//TODO:terminar
 btnNuevo.addEventListener('click',()=>{
-    console.log("Nuevo Juego Creado")
+    console.clear()
+    deck = createDeck()
+    jugadorPuntos = 0
+    computadoraPuntos = 0
+    puntosHTML[0].innerText = 0
+    puntosHTML[1].innerText = 0
+    divComputadoraCartas.innerHTML = ""
+    divJugadorCartas.innerHTML = ""
+    btnPedir.disabled = false
+    btnDetener.disabled = false
+    
 })
+
 btnDetener.addEventListener('click',()=>{
     console.log("Juego Detenido")
+    btnPedir.disabled = true
+    btnDetener.disabled = true
+    turnoCompu(jugadorPuntos)
 })
